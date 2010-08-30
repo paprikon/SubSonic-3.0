@@ -77,6 +77,11 @@
     <Compile Include="DataProviders\LazyLoadInterceptor.cs" />
     <Compile Include="DataProviders\IQueryLanguage.cs" />
     <Compile Include="DataProviders\MySQL\MySqlProvider.cs" />
+    <Compile Include="DataProviders\PostgreSql\PostgreSqlProvider.cs" />
+    <Compile Include="DataProviders\PostgreSql\PostgreSqlGenerator.cs" />
+    <Compile Include="DataProviders\PostgreSql\PostgreSqlLanguage.cs" />
+    <Compile Include="DataProviders\PostgreSql\PostgreSqlSchema.cs" />
+    <Compile Include="DataProviders\PostgreSql\PostgreSqlFormatter.cs" />
     <Compile Include="DataProviders\SqlServer\SqlServerProvider.cs" />
     <Compile Include="DataProviders\SQLite\SQLiteProvider.cs" />
     <Compile Include="Linq\Translation\CountOrderByRemover.cs" />
