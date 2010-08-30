@@ -34,7 +34,7 @@ namespace SubSonic.DataProviders.PostgreSql
         /// <param name="query">The query.</param>
         public PostgreSqlGenerator(SqlQuery query)
             : base(query) {
-                ClientName = "System.Data.PostgreSql";
+					ClientName = "Npgsql.PostgreSqlClient";
         }
 
         /// <summary>

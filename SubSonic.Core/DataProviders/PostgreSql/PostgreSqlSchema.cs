@@ -25,17 +25,17 @@ namespace SubSonic.DataProviders.PostgreSql
     {
         public PostgreSqlSchema()
         {
-            ADD_COLUMN = @"ALTER TABLE `{0}` ADD `{1}`{2};";
+            ADD_COLUMN = "ALTER TABLE \"{0}\" ADD \"{1}\"{2};";
             //can't do this
             ALTER_COLUMN = @"";
-            CREATE_TABLE = "CREATE TABLE `{0}` ({1} \r\n);";
+            CREATE_TABLE = "CREATE TABLE \"{0}\" ({1} \r\n);";
             //can't do this
             DROP_COLUMN = @"";
-            DROP_TABLE = @"DROP TABLE {0};";
+            DROP_TABLE = "DROP TABLE \"{0}\";";
 
-            UPDATE_DEFAULTS = @"UPDATE `{0}` SET `{1}`={2};";
+            UPDATE_DEFAULTS = "UPDATE \"{0}\" SET \"{1}\"={2};";
 
-            ClientName = "System.Data.PostgreSql";
+            ClientName = "Npgsql.PostgreSqlClient";
         }
 
         public override string GetNativeType(DbType dbType)
@@ -47,7 +47,7 @@ namespace SubSonic.DataProviders.PostgreSql
                 case DbType.AnsiStringFixedLength:
                 case DbType.String:
                 case DbType.StringFixedLength:
-                    return "nvarchar";
+                    return "varchar";
                 case DbType.Boolean:
                     return "tinyint";
                 case DbType.SByte:
@@ -82,23 +82,19 @@ namespace SubSonic.DataProviders.PostgreSql
                 case DbType.Xml:
                     return "xml";
                 default:
-                    return "nvarchar";
+                    return "varchar";
             }
         }
 
         public override string BuildDropColumnStatement(string tableName, string columnName)
         {
-            //what a pain
-            //http://grass.osgeo.org/wiki/Sqlite_Drop_Column
-            Console.WriteLine("Can't drop a column from PostgreSql - you have to do this manually: http://grass.osgeo.org/wiki/Sqlite_Drop_Column");
+			  //TODO: drop column
             return "";
         }
 
         public override string BuildAlterColumnStatement(IColumn column)
         {
-            //PostgreSql doesn't support altering columns. There is no typing either, or length considerations
-            //so - unless we're adding/dropping, fuggedaboutit
-            //http://stackoverflow.com/questions/623044/how-to-alter-sqlite-column-iphone
+			  //TODO: alter column
             return "";
         }
 
