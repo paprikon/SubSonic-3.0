@@ -143,5 +143,6 @@ namespace SubSonic.DataProviders.PostgreSql
 
             return sb.ToString();
         }
+
     }
 }
