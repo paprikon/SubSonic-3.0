@@ -404,10 +404,10 @@ namespace SubSonic.DataProviders.PostgreSql
         {
             if (column.Alias != null)
             {
-                sb.AppendFormat("`{0}`", GetAliasName(column.Alias));
+                sb.AppendFormat("\"{0}\"", GetAliasName(column.Alias));
                 sb.Append(".");
             }
-            sb.AppendFormat("`{0}`", column.Name);
+            sb.AppendFormat("\"{0}\"", column.Name);
             return column;
         }
 
