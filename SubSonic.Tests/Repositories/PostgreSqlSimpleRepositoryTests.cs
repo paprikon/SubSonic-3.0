@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SubSonic.DataProviders;
+using Xunit;
 
 namespace SubSonic.Tests.Repositories
 {
