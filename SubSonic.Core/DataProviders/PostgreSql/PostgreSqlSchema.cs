@@ -217,6 +217,37 @@ namespace SubSonic.DataProviders.PostgreSql
             else if (column.DataType == DbType.Boolean)
                 column.DefaultSetting = false;
         }
-    
-    }
+
+		  public override ITable GetTableFromDB(IDataProvider provider, string tableName)
+		  {
+			  ITable result = null;
+			  DataTable schema;
+
+			  using (var scope = new AutomaticConnectionScope(provider))
+			  {
+				  var restrictions = new string[4] { null, null, tableName, null };
+				  schema = scope.Connection.GetSchema("Columns", restrictions); //case difference between default and the Npgsql provider
+			  }
+
+			  if (schema.Rows.Count > 0)
+			  {
+				  result = new DatabaseTable(tableName, provider);
+				  foreach (DataRow dr in schema.Rows)
+				  {
+					  IColumn col = new DatabaseColumn(dr["column_name"].ToString(), result);
+					  col.DataType = GetDbType(dr["DATA_TYPE"].ToString()); //TODO: might have to derive this from obvervation of attributes
+					  col.IsNullable = dr["is_nullable"].ToString() == "YES";
+
+					  string maxLength = dr["character_maximum_length"].ToString();
+
+					  int iMax = 0;
+					  int.TryParse(maxLength, out iMax);
+					  col.MaxLength = iMax;
+					  result.Columns.Add(col);
+				  }
+			  }
+
+			  return result;
+		  }
+	 }
 }
