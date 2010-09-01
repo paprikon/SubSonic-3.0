@@ -46,7 +46,7 @@ namespace SubSonic.DataProviders.PostgreSql
                             args = ((NewArrayExpression)args[0]).Expressions;
                         }
                         for (int i = 0, n = args.Count; i < n; i++) {
-                            if (i > 0) sb.Append(" + ");
+                            if (i > 0) sb.Append(" || ");
                             this.Visit(args[i]);
                         }
                         return m;
@@ -118,19 +118,6 @@ namespace SubSonic.DataProviders.PostgreSql
                         this.Visit(m.Object);
                         sb.Append("))");
                         return m;
-                }
-            } else if (m.Method.DeclaringType == typeof(DateTime)) {
-                switch (m.Method.Name) {
-                    case "op_Subtract":
-                        if (m.Arguments[1].Type == typeof(DateTime)) {
-                            sb.Append("DATEDIFF(");
-                            this.Visit(m.Arguments[0]);
-                            sb.Append(", ");
-                            this.Visit(m.Arguments[1]);
-                            sb.Append(")");
-                            return m;
-                        }
-                        break;
                 }
             } else if (m.Method.DeclaringType == typeof(Decimal)) {
                 switch (m.Method.Name) {

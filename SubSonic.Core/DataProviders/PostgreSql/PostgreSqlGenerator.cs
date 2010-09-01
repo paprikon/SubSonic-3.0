@@ -20,129 +20,130 @@ using SubSonic.SqlGeneration;
 
 namespace SubSonic.DataProviders.PostgreSql
 {
-    
-    public class PostgreSqlGenerator : ANSISqlGenerator
-    {
-        private const string PAGING_SQL =
-            @"{0}
+
+	public class PostgreSqlGenerator : ANSISqlGenerator
+	{
+		private const string PAGING_SQL =
+			 @"{0}
         {1}
         LIMIT {2}, {3};";
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PostgreSqlGenerator"/> class.
-        /// </summary>
-        /// <param name="query">The query.</param>
-        public PostgreSqlGenerator(SqlQuery query)
-            : base(query) {
-					ClientName = "Npgsql.PostgreSqlClient";
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PostgreSqlGenerator"/> class.
+		/// </summary>
+		/// <param name="query">The query.</param>
+		public PostgreSqlGenerator(SqlQuery query)
+			: base(query)
+		{
+			ClientName = "Npgsql.PostgreSqlClient";
+		}
 
-        /// <summary>
-        /// Builds the paged select statement.
-        /// </summary>
-        /// <returns></returns>
-        public override string BuildPagedSelectStatement()
-        {
-            string select = GenerateCommandLine();
-            string fromLine = GenerateFromList();
-            string joins = GenerateJoins();
-            string wheres = GenerateConstraints();
-            string orderby = GenerateOrderBy();
-            string havings = String.Empty;
-            string groupby = String.Empty;
+		/// <summary>
+		/// Builds the paged select statement.
+		/// </summary>
+		/// <returns></returns>
+		public override string BuildPagedSelectStatement()
+		{
+			string select = GenerateCommandLine();
+			string fromLine = GenerateFromList();
+			string joins = GenerateJoins();
+			string wheres = GenerateConstraints();
+			string orderby = GenerateOrderBy();
+			string havings = String.Empty;
+			string groupby = String.Empty;
 
-            if(query.Aggregates.Count > 0)
-                groupby = GenerateGroupBy();
+			if (query.Aggregates.Count > 0)
+				groupby = GenerateGroupBy();
 
-            string sql = string.Format(PAGING_SQL,
-                String.Concat(select, fromLine, joins),
-                String.Concat(wheres, groupby, havings, orderby),
-                (query.CurrentPage - 1) * query.PageSize, query.PageSize);
+			string sql = string.Format(PAGING_SQL,
+				 String.Concat(select, fromLine, joins),
+				 String.Concat(wheres, groupby, havings, orderby),
+				 (query.CurrentPage - 1) * query.PageSize, query.PageSize);
 
-            return sql;
-        }
+			return sql;
+		}
 
-        /// <summary>
-        /// Builds the insert statement.
-        /// </summary>
-        /// <returns></returns>
-        public override string BuildInsertStatement()
-        {
-            StringBuilder sb = new StringBuilder();
+		/// <summary>
+		/// Builds the insert statement.
+		/// </summary>
+		/// <returns></returns>
+		public override string BuildInsertStatement()
+		{
+			StringBuilder sb = new StringBuilder();
 
-            //cast it
-            Insert i = insert;
-            sb.Append(this.sqlFragment.INSERT_INTO);
-            sb.Append(i.Table.QualifiedName);
-            sb.Append("(");
-            sb.Append(i.SelectColumns);
-            sb.AppendLine(")");
+			//cast it
+			Insert i = insert;
+			sb.Append(this.sqlFragment.INSERT_INTO);
+			sb.Append(i.Table.QualifiedName);
+			sb.Append("(");
+			sb.Append(i.SelectColumns);
+			sb.AppendLine(")");
 
-            //if the values list is set, use that
-            if(i.Inserts.Count > 0)
-            {
-                sb.Append(" VALUES (");
-                bool isFirst = true;
-                foreach(InsertSetting s in i.Inserts)
-                {
-                    if(!isFirst)
-                        sb.Append(",");
-                    if(!s.IsExpression)
-                        sb.Append(s.ParameterName);
-                    else
-                        sb.Append(s.Value);
-                    isFirst = false;
-                }
-                sb.AppendLine(")");
-            }
-            else
-            {
-                throw new InvalidOperationException("Need to specify Values or a Select query to insert - can't go on!");
-            }
+			//if the values list is set, use that
+			if (i.Inserts.Count > 0)
+			{
+				sb.Append(" VALUES (");
+				bool isFirst = true;
+				foreach (InsertSetting s in i.Inserts)
+				{
+					if (!isFirst)
+						sb.Append(",");
+					if (!s.IsExpression)
+						sb.Append(s.ParameterName);
+					else
+						sb.Append(s.Value);
+					isFirst = false;
+				}
+				sb.AppendLine(")");
+			}
+			else
+			{
+				throw new InvalidOperationException("Need to specify Values or a Select query to insert - can't go on!");
+			}
 
-            sb.AppendLine(";");
+			if (i.Table.HasPrimaryKey)
+				sb.AppendFormat(" RETURNING {0};", i.Table.PrimaryKey.QualifiedName);
 
-            sb.AppendFormat("SELECT last_insert_rowid();");
-            return sb.ToString();
-        }
+			return sb.ToString();
+		}
 
-        public override string BuildUpdateStatement()
-        {
-            StringBuilder sb = new StringBuilder();
+		public override string BuildUpdateStatement()
+		{
+			StringBuilder sb = new StringBuilder();
 
-            //cast it
+			//cast it
 
-            sb.Append(this.sqlFragment.UPDATE);
-            sb.Append(query.FromTables[0].QualifiedName);
+			sb.Append(this.sqlFragment.UPDATE);
+			sb.Append(query.FromTables[0].QualifiedName);
 
-            for(int i = 0; i < query.SetStatements.Count; i++)
-            {
-                if(i == 0)
-                {
-                    sb.AppendLine(" ");
-                    sb.Append(this.sqlFragment.SET);
-                }
-                else
-                    sb.AppendLine(", ");
+			for (int i = 0; i < query.SetStatements.Count; i++)
+			{
+				if (i == 0)
+				{
+					sb.AppendLine(" ");
+					sb.Append(this.sqlFragment.SET);
+				}
+				else
+					sb.AppendLine(", ");
 
-                //if (!String.IsNullOrEmpty(u.ProviderName))
-                //    sb.Append(DataService.GetInstance(u.ProviderName).DelimitDbName(u.SetStatements[i].ColumnName));
-                //else
-                sb.AppendFormat("{0}", query.SetStatements[i].ColumnName);
+				//if (!String.IsNullOrEmpty(u.ProviderName))
+				//    sb.Append(DataService.GetInstance(u.ProviderName).DelimitDbName(u.SetStatements[i].ColumnName));
+				//else
+				sb.AppendFormat("{0}", query.SetStatements[i].ColumnName);
 
-                sb.Append("=");
+				sb.Append("=");
 
-                if(!query.SetStatements[i].IsExpression)
-                    sb.Append(query.SetStatements[i].ParameterName);
-                else
-                    sb.Append(query.SetStatements[i].Value.ToString());
-            }
+				if (!query.SetStatements[i].IsExpression)
+					sb.Append(query.SetStatements[i].ParameterName);
+				else
+					sb.Append(query.SetStatements[i].Value.ToString());
+			}
 
-            //wheres
-            sb.Append(GenerateConstraints());
+			//wheres
+			sb.Append(GenerateConstraints());
 
-            return sb.ToString();
-        }
+			return sb.ToString();
+		}
 
-    }
+	}
 }
