@@ -26,7 +26,7 @@ namespace SubSonic.DataProviders.PostgreSql
 		private const string PAGING_SQL =
 			 @"{0}
         {1}
-        LIMIT {2}, {3};";
+        LIMIT {2} {3};";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PostgreSqlGenerator"/> class.
@@ -58,7 +58,7 @@ namespace SubSonic.DataProviders.PostgreSql
 			string sql = string.Format(PAGING_SQL,
 				 String.Concat(select, fromLine, joins),
 				 String.Concat(wheres, groupby, havings, orderby),
-				 (query.CurrentPage - 1) * query.PageSize, query.PageSize);
+				 query.PageSize, (query.CurrentPage - 1) * query.PageSize); //limit/offset switched for this db
 
 			return sql;
 		}
@@ -144,6 +144,5 @@ namespace SubSonic.DataProviders.PostgreSql
 
 			return sb.ToString();
 		}
-
 	}
 }
