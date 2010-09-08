@@ -11,16 +11,9 @@ namespace SubSonic.Tests.Repositories
     public class PostgreSqlSimpleRepositoryTests : SimpleRepositoryTests
     {
 		 public PostgreSqlSimpleRepositoryTests() :
-			 base(ProviderFactory.GetProvider(@"host=localhost;database=subsonic;user id=root; password=;", "Npgsql.PostgreSqlClient"))
+			 base(ProviderFactory.GetProvider(@"host=localhost;database=subsonic;user id=subsonic; password=;", "Npgsql.PostgreSqlClient"))
         {
         }
-
-		 //specific tests.. remove later. 
-		 [Fact]
-		 public void Simple_Repo_Should_Implement_String_StartsWith2()
-		 {
-			 this.Simple_Repo_Should_Implement_String_StartsWith();
-		 }
 
 		 protected override void CleanTables()
 		 {
