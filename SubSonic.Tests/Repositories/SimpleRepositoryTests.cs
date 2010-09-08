@@ -95,7 +95,7 @@ namespace SubSonic.Tests.Repositories
 
     public abstract class SimpleRepositoryTests
     {
-        private readonly IDataProvider _provider;
+        protected readonly IDataProvider _provider;
         private readonly IRepository _repo;
 
         protected virtual string[] StringNumbers
@@ -117,7 +117,7 @@ namespace SubSonic.Tests.Repositories
             _repo = repo;
         }
 
-        private void CleanTables()
+        protected virtual void CleanTables()
         {
             try
             {

@@ -13,9 +13,12 @@
 // 
 using System;
 using System.Text;
+using SubSonic.Extensions;
 using SubSonic.Query;
 using SubSonic.DataProviders;
 using SubSonic.SqlGeneration;
+using SubSonic.Schema;
+using System.Data;
 
 
 namespace SubSonic.DataProviders.PostgreSql
@@ -37,6 +40,7 @@ namespace SubSonic.DataProviders.PostgreSql
 		{
 			ClientName = "Npgsql.PostgreSqlClient";
 		}
+
 
 		/// <summary>
 		/// Builds the paged select statement.
@@ -61,6 +65,38 @@ namespace SubSonic.DataProviders.PostgreSql
 				 query.PageSize, (query.CurrentPage - 1) * query.PageSize); //limit/offset switched for this db
 
 			return sql;
+		}
+
+		/// <summary>
+		/// Generates the group by.
+		/// </summary>
+		/// <returns></returns>
+		public override string GenerateGroupBy()
+		{
+			string result = String.Empty;
+
+			if (query.Aggregates.Count > 0)
+			{
+				StringBuilder sb = new StringBuilder();
+				sb.AppendLine();
+
+				bool isFirst = true;
+				foreach (SubSonic.Query.Aggregate agg in query.Aggregates)
+				{
+					if (agg.AggregateType == AggregateFunction.GroupBy)
+					{
+						if (!isFirst)
+							sb.Append(", ");
+						else
+							sb.Append(this.sqlFragment.GROUP_BY);
+
+						sb.Append(string.Format("\"{0}\"", agg.ColumnName));
+						isFirst = false;
+					}
+				}
+			}
+
+			return result;
 		}
 
 		/// <summary>
