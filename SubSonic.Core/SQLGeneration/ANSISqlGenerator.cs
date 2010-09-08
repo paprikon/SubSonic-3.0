@@ -295,17 +295,20 @@ namespace SubSonic.SqlGeneration
 			{
 				string columnName = String.Empty;
 				bool foundColumn = false;
-				if (c.ConstructionFragment == c.ColumnName && c.ConstructionFragment != "##")
-				{
-					IColumn col = FindColumn(c.ColumnName);
 
-					if (col != null)
-					{
-						columnName = col.QualifiedName;
-						c.ParameterName = string.Format("{0}{1}", GetParameterPrefix(), indexer);
-						c.DbType = col.DataType;
-						foundColumn = true;
-					}
+				//added searching for column by constructionFragment 
+				IColumn col = null;
+				if (string.IsNullOrEmpty(c.ColumnName) && !string.IsNullOrEmpty(c.ConstructionFragment) && c.ConstructionFragment != "##")
+					col = FindColumn(c.ConstructionFragment);
+				else if (c.ConstructionFragment == c.ColumnName && c.ConstructionFragment != "##")
+					col = FindColumn(c.ColumnName);
+
+				if (col != null)
+				{
+					columnName = col.QualifiedName;
+					c.ParameterName = string.Format("{0}{1}", GetParameterPrefix(), indexer);
+					c.DbType = col.DataType;
+					foundColumn = true;
 				}
 
 				if (!foundColumn && c.ConstructionFragment != "##")
@@ -326,7 +329,6 @@ namespace SubSonic.SqlGeneration
 						isAggregate = true;
 					}
 
-					IColumn col = FindColumn(c.ColumnName);
 					if (!isAggregate && col != null)
 					{
 						columnName = c.ConstructionFragment.FastReplace(col.Name, col.QualifiedName);
