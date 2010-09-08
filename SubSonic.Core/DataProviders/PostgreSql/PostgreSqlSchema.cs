@@ -36,7 +36,7 @@ namespace SubSonic.DataProviders.PostgreSql
 
 			UPDATE_DEFAULTS = "UPDATE \"{0}\" SET \"{1}\"={2};";
 
-			ClientName = "Npgsql.PostgreSqlClient";
+			ClientName = "Npgsql";
 		}
 
 		public override string GetNativeType(DbType dbType)

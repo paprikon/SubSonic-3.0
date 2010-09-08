@@ -382,7 +382,7 @@ namespace SubSonic.DataProviders.PostgreSql
             if (take > 0)
             {
                 AppendNewLine(Indentation.Same);
-                sb.AppendFormat(" LIMIT {0},{1}", skip, take);
+					 sb.AppendFormat(" LIMIT {0} OFFSET {1}", take, skip);
             }
             return select;
         }
