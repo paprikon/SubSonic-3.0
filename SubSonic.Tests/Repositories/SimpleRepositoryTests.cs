@@ -26,6 +26,8 @@ namespace SubSonic.Tests.Repositories
 {
     public abstract class SimpleRepositoryTests
     {
+        private readonly IDataProvider _provider;
+        protected readonly IDataProvider _provider;
         private readonly IRepository _repo;
 
         protected virtual string[] StringNumbers
@@ -45,6 +47,33 @@ namespace SubSonic.Tests.Repositories
         public SimpleRepositoryTests(IRepository repo)
         {
             _repo = repo;
+        }
+
+        protected virtual void CleanTables()
+        {
+            try
+            {
+                var qry = new CodingHorror(_provider, "DROP TABLE Shwerkos").Execute();
+            }
+            catch { }
+
+            try
+            {
+                new CodingHorror(_provider, "DROP TABLE DummyForDeletes").Execute();
+            }
+            catch { }
+
+            try
+            {
+                new CodingHorror(_provider, "DROP TABLE Shwerko2s").Execute();
+            }
+            catch { }
+
+            try
+            {
+                new CodingHorror(_provider, "DROP TABLE NonAutoIncrementingIdWithDefaultSettings").Execute();
+            }
+            catch { }
         }
 
         private Shwerko CreateTestRecord(Guid key)
