@@ -14,7 +14,7 @@ namespace SubSonic.DataProviders.PostgreSql
         public PostgreSqlLanguage(IDataProvider provider)
             : base(provider)
         {
-			  ClientName = "Npgsql.PostgreSqlClient";
+			  ClientName = "Npgsql";
         }
 
 

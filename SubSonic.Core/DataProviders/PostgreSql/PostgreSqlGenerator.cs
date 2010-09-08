@@ -29,7 +29,7 @@ namespace SubSonic.DataProviders.PostgreSql
 		private const string PAGING_SQL =
 			 @"{0}
         {1}
-        LIMIT {2} {3};";
+        LIMIT {2} OFFSET {3};";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PostgreSqlGenerator"/> class.
@@ -38,7 +38,7 @@ namespace SubSonic.DataProviders.PostgreSql
 		public PostgreSqlGenerator(SqlQuery query)
 			: base(query)
 		{
-			ClientName = "Npgsql.PostgreSqlClient";
+			ClientName = "Npgsql";
 		}
 
 

@@ -33,7 +33,7 @@ namespace SubSonic.DataProviders
             defaults.Add("System.Data.SqlClient", (conn, provider) => new SqlServerProvider(conn, provider));
             defaults.Add("MySql.Data.MySqlClient", (conn, provider) => new MySqlProvider(conn, provider));
 				defaults.Add("System.Data.SQLite", (conn, provider) => new SQLiteProvider(conn, provider));
-				defaults.Add("Npgsql.PostgreSqlClient", (conn, provider) => new PostgreSql.PostgreSqlProvider(conn, provider));
+				defaults.Add("Npgsql", (conn, provider) => new PostgreSql.PostgreSqlProvider(conn, provider));
             
             return defaults;
         }
