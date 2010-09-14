@@ -26,8 +26,8 @@ namespace SubSonic.Tests.Repositories
 {
     public abstract class SimpleRepositoryTests
     {
-<<<<<<< .mine        protected readonly IDataProvider _provider;
-=======>>>>>>> .theirs        private readonly IRepository _repo;
+        protected readonly IDataProvider _provider;
+        private readonly IRepository _repo;
 
         protected virtual string[] StringNumbers
         {
