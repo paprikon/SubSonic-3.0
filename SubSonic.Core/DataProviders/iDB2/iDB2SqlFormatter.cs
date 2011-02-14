@@ -376,25 +376,25 @@ namespace SubSonic.DataProviders.iDB2
                 }
             }
 
-            int skip = select.Skip == null ? 0 : (int) select.Skip.GetConstantValue();
-            int take = select.Take == null ? 0 : (int) select.Take.GetConstantValue();
+				//int skip = select.Skip == null ? 0 : (int) select.Skip.GetConstantValue();
+				//int take = select.Take == null ? 0 : (int) select.Take.GetConstantValue();
 
-            if (take > 0)
-            {
-                AppendNewLine(Indentation.Same);
-					 sb.AppendFormat(" LIMIT {0} OFFSET {1}", take, skip);
-            }
+				//if (take > 0)
+				//{
+				//    AppendNewLine(Indentation.Same);
+				//    sb.AppendFormat(" LIMIT {0} OFFSET {1}", take, skip);
+				//}
             return select;
         }
 
         protected override Expression VisitColumn(ColumnExpression column)
         {
-            if (column.Alias != null)
-            {
-                sb.AppendFormat("\"{0}\"", GetAliasName(column.Alias));
-                sb.Append(".");
-            }
-            sb.AppendFormat("\"{0}\"", column.Name);
+				//if (column.Alias != null)
+				//{
+				//    sb.AppendFormat("\"{0}\"", GetAliasName(column.Alias));
+				//    sb.Append(".");
+				//}
+            sb.AppendFormat("{0}", column.Name);
             return column;
         }
 

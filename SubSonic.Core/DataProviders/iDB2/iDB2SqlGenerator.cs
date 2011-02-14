@@ -28,8 +28,7 @@ namespace SubSonic.DataProviders.iDB2
 	{
 		private const string PAGING_SQL =
 			 @"{0}
-        {1}
-        LIMIT {2} OFFSET {3};";
+        {1}";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="iDB2Generator"/> class.
@@ -41,31 +40,6 @@ namespace SubSonic.DataProviders.iDB2
 			ClientName = "IBM.Data.DB2.iSeries";
 		}
 
-
-		/// <summary>
-		/// Builds the paged select statement.
-		/// </summary>
-		/// <returns></returns>
-		public override string BuildPagedSelectStatement()
-		{
-			string select = GenerateCommandLine();
-			string fromLine = GenerateFromList();
-			string joins = GenerateJoins();
-			string wheres = GenerateConstraints();
-			string orderby = GenerateOrderBy();
-			string havings = String.Empty;
-			string groupby = String.Empty;
-
-			if (query.Aggregates.Count > 0)
-				groupby = GenerateGroupBy();
-
-			string sql = string.Format(PAGING_SQL,
-				 String.Concat(select, fromLine, joins),
-				 String.Concat(wheres, groupby, havings, orderby),
-				 query.PageSize, (query.CurrentPage - 1) * query.PageSize); //limit/offset switched for this db
-
-			return sql;
-		}
 
 		/// <summary>
 		/// Generates the group by.
@@ -138,8 +112,10 @@ namespace SubSonic.DataProviders.iDB2
 			}
 
 			if (i.Table.HasPrimaryKey)
-				sb.AppendFormat(" RETURNING {0};", i.Table.PrimaryKey.QualifiedName);
-
+			{
+				sb.Insert(0, string.Format("SELECT {0} FROM FINAL TABLE (",  i.Table.PrimaryKey.QualifiedName));
+				sb.Append(')');
+			}
 			return sb.ToString();
 		}
 

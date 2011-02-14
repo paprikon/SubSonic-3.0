@@ -26,15 +26,15 @@ namespace SubSonic.DataProviders.iDB2
 	{
 		public iDB2Schema()
 		{
-			ADD_COLUMN = "ALTER TABLE \"{0}\" ADD \"{1}\"{2};";
+			ADD_COLUMN = "ALTER TABLE {0} ADD {1} {2}";
 			//can't do this
 			ALTER_COLUMN = @"";
-			CREATE_TABLE = "CREATE TABLE \"{0}\" ({1} \r\n);";
+			CREATE_TABLE = "CREATE TABLE {0} ({1} \r\n)";
 			//can't do this
 			DROP_COLUMN = @"";
-			DROP_TABLE = "DROP TABLE \"{0}\";";
+			DROP_TABLE = "DROP TABLE {0}";
 
-			UPDATE_DEFAULTS = "UPDATE \"{0}\" SET \"{1}\"={2};";
+			UPDATE_DEFAULTS = "UPDATE {0} SET {1}={2}";
 
 			ClientName = "IBM.Data.DB2.iSeries";
 		}
@@ -47,6 +47,7 @@ namespace SubSonic.DataProviders.iDB2
 				case DbType.AnsiString:
 				case DbType.AnsiStringFixedLength:
 				case DbType.String:
+				case DbType.Xml:
 				case DbType.StringFixedLength:
 					return "varchar";
 				case DbType.Boolean:
@@ -54,7 +55,7 @@ namespace SubSonic.DataProviders.iDB2
 				case DbType.SByte:
 				case DbType.Binary:
 				case DbType.Byte:
-					return "bytea";
+					return "BLOB";
 				case DbType.Currency:
 					return "money";
 				case DbType.Time:
@@ -66,22 +67,17 @@ namespace SubSonic.DataProviders.iDB2
 				case DbType.Double:
 					return "real";
 				case DbType.Guid:
-					return "uuid";
+					return "varchar(36)";
 				case DbType.UInt32:
 				case DbType.Int32:
-					return "integer";
 				case DbType.Int16:
 				case DbType.UInt16:
-					return "smallint";
 				case DbType.UInt64:
-				case DbType.Int64:
-					return "bigint";
 				case DbType.Single:
-					return "smallint";
+				case DbType.Int64:
+					return "integer";
 				case DbType.VarNumeric:
 					return "numeric";
-				case DbType.Xml:
-					return "xml";
 				default:
 					return "varchar";
 			}
@@ -108,16 +104,13 @@ namespace SubSonic.DataProviders.iDB2
 		{
 			StringBuilder sb = new StringBuilder();
 			if (column.DataType == DbType.String && column.MaxLength > 8000)
-				sb.Append(" TEXT ");
+				sb.Append(" CLOB ");
 			else if (column.IsPrimaryKey && column.DataType == DbType.Int32
 				 || column.IsPrimaryKey && column.DataType == DbType.Int16
 				 || column.IsPrimaryKey && column.DataType == DbType.Int64
 				 )
 			{
-				if (column.AutoIncrement)
-					sb.Append(" SERIAL");
-				else
-					sb.Append(" INTEGER ");
+				sb.Append(" INTEGER ");
 			}
 			else
 				sb.Append(" " + GetNativeType(column.DataType));
@@ -135,11 +128,10 @@ namespace SubSonic.DataProviders.iDB2
 			{
 				if (!column.IsNullable)
 					sb.Append(" NOT NULL");
-				else
-					sb.Append(" NULL");
+				//default is nullable
 
 				if (column.DefaultSetting != null)
-					sb.Append(" DEFAULT '" + column.DefaultSetting + "'");
+					sb.Append(" WITH DEFAULT '" + column.DefaultSetting + "'");
 			}
 
 			return sb.ToString();
@@ -154,13 +146,10 @@ namespace SubSonic.DataProviders.iDB2
 		{
 			switch (sqlType.ToLowerInvariant())
 			{
-				case "longtext":
-				case "nchar":
-				case "ntext":
-				case "text":
-				case "sysname":
+				case "CLOB":
+				case "DBCLOB":
+				case "VARCHAR":
 				case "varchar":
-				case "nvarchar":
 					return DbType.String;
 				case "bit":
 				case "boolean":
@@ -168,32 +157,22 @@ namespace SubSonic.DataProviders.iDB2
 				case "decimal":
 				case "newdecimal":
 				case "numeric":
-				case "double":
 				case "real":
 					return DbType.Decimal;
+				case "double":
+					return DbType.Double;
 				case "int":
 				case "int4" :
 				case "integer" :
 					return DbType.Int32;
-				case "int8" :
-				case "bigint":
-					return DbType.Int64;
-				case "int2" :
-				case "smallint":
-					return DbType.Int16;
 				case "date":
 				case "time":
 				case "timestamp":
 					return DbType.DateTime;
-				case "lo":
-				case "bytea" :
+				case "BLOB":
 					return DbType.Binary;
 				case "char":
 					return DbType.AnsiStringFixedLength;
-				case "money":
-					return DbType.Currency;
-				case "uuid":
-					return DbType.Guid;
 				default:
 					return DbType.String;
 			}
@@ -219,8 +198,7 @@ namespace SubSonic.DataProviders.iDB2
 
 			using (var scope = new AutomaticConnectionScope(provider))
 			{
-				var restrictions = new string[4] { null, null, tableName, null };
-				schema = scope.Connection.GetSchema("Columns", restrictions); //case difference between default and the iDB2 provider
+				schema = scope.Connection.GetSchema("Columns", new string[] {tableName}); //case difference between default and the iDB2 provider
 			}
 
 			if (schema.Rows.Count > 0)
@@ -255,11 +233,18 @@ namespace SubSonic.DataProviders.iDB2
 
 			foreach (IColumn col in table.Columns)
 			{
-				createSql.AppendFormat("\r\n  {0}{1},", col.QualifiedName, GenerateColumnAttributes(col));
+				if (col.AutoIncrement)
+				{
+					createSql.AppendFormat("\r\n {0} INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1 CYCLE ORDER),", col.QualifiedName);
+				}
+				else
+				{
+					createSql.AppendFormat("\r\n  {0}{1},", col.QualifiedName, GenerateColumnAttributes(col));
+				}
 			}
 
 			if (table.HasPrimaryKey)
-				createSql.AppendFormat("PRIMARY KEY({0}),", table.PrimaryKey.QualifiedName);
+				createSql.AppendFormat("\r\n CONSTRAINT {0}_KEY PRIMARY KEY({0}),", table.PrimaryKey.QualifiedName);
 			
 			string columnSql = createSql.ToString();
 			return columnSql.Chop(",");

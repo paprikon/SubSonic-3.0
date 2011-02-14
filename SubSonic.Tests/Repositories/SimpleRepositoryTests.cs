@@ -42,7 +42,16 @@ namespace SubSonic.Tests.Repositories
             TestSupport.CleanTables(provider,
                             "Shwerkos", "DummyForDeletes", "Shwerko2s", "NonAutoIncrementingIdWithDefaultSettings");            
         }
+		  public SimpleRepositoryTests(IDataProvider provider, SimpleRepositoryOptions options, bool clean)
+		  {
+			  provider.Log = Console.Out;
+			  _repo = new SimpleRepository(provider, options);
 
+			  if (clean)
+				  TestSupport.CleanTables(provider,
+					"Shwerkos", "DummyForDeletes", "Shwerko2s", "NonAutoIncrementingIdWithDefaultSettings");
+
+		  }
         public SimpleRepositoryTests(IRepository repo)
         {
             _repo = repo;

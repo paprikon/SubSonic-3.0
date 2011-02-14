@@ -20,7 +20,7 @@ namespace SubSonic.DataProviders.iDB2
 
         public override string Quote(string name)
         {
-            return string.Format("'{0}'", name);
+            return string.Format("{0}", name);
             //return cb.QuoteIdentifier(name);
         }
 

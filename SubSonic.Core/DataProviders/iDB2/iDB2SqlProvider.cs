@@ -23,7 +23,7 @@ namespace SubSonic.DataProviders.iDB2
         {
             string qualifiedTable;
 
-            qualifiedTable = qualifiedTable = String.Format("\"{0}\"", table.Name);
+            qualifiedTable = qualifiedTable = String.Format("{0}", table.Name);
 
 
             return qualifiedTable;
@@ -32,7 +32,7 @@ namespace SubSonic.DataProviders.iDB2
         public override string QualifyColumnName(IColumn column)
         {
             string qualifiedFormat;
-            qualifiedFormat = "\"{2}\"";
+            qualifiedFormat = "{2}";
             return String.Format(qualifiedFormat, column.Table.SchemaName, column.Table.Name, column.Name);
         }
 
