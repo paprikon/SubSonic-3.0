@@ -55,27 +55,27 @@ namespace SubSonic.DataProviders.iDB2
 				case DbType.SByte:
 				case DbType.Binary:
 				case DbType.Byte:
-					return "BLOB";
-				case DbType.Currency:
-					return "money";
+					return "varbinary";
 				case DbType.Time:
 				case DbType.Date:
 				case DbType.DateTime:
 					return "timestamp";
+				case DbType.Currency:
 				case DbType.Decimal:
-					return "decimal";
 				case DbType.Double:
-					return "real";
+				case DbType.Single:
+					return "decimal";
 				case DbType.Guid:
 					return "varchar(36)";
-				case DbType.UInt32:
-				case DbType.Int32:
 				case DbType.Int16:
+					return "smallint";
 				case DbType.UInt16:
-				case DbType.UInt64:
-				case DbType.Single:
-				case DbType.Int64:
+				case DbType.Int32:
 					return "integer";
+				case DbType.UInt32:
+				case DbType.UInt64:
+				case DbType.Int64:
+					return "bigint";
 				case DbType.VarNumeric:
 					return "numeric";
 				default:
@@ -146,33 +146,35 @@ namespace SubSonic.DataProviders.iDB2
 		{
 			switch (sqlType.ToLowerInvariant())
 			{
-				case "CLOB":
-				case "DBCLOB":
-				case "VARCHAR":
+				case "character":
+					return DbType.StringFixedLength;
 				case "varchar":
 					return DbType.String;
-				case "bit":
-				case "boolean":
-					return DbType.Boolean;
 				case "decimal":
-				case "newdecimal":
 				case "numeric":
-				case "real":
+				case "decfloat":
+				case "float":
 					return DbType.Decimal;
-				case "double":
-					return DbType.Double;
-				case "int":
-				case "int4" :
 				case "integer" :
 					return DbType.Int32;
+				case "smallint":
+					return DbType.Int16;
+				case "bigint":
+					return DbType.Int64;
 				case "date":
 				case "time":
 				case "timestamp":
 					return DbType.DateTime;
-				case "BLOB":
+				case "clob":
+				case "dbclob":
+				case "blob":
+				case "graphic":
+				case "vargraphic":
+				case "varbinary":
+				case "binary":
 					return DbType.Binary;
-				case "char":
-					return DbType.AnsiStringFixedLength;
+				case "rowid":
+					return DbType.String; //using default, but provided for visibility.
 				default:
 					return DbType.String;
 			}
