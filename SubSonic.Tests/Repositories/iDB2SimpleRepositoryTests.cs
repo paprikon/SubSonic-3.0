@@ -85,7 +85,6 @@ namespace SubSonic.Tests.Repositories
 		public new void Simple_Repo_GetPaged_Should_Not_Expect_Case_Sensitive_Order() { base.Simple_Repo_GetPaged_Should_Not_Expect_Case_Sensitive_Order(); }
 		public new void Simple_Repo_Should_Add_Multiple_Shwerko_Item() { base.Simple_Repo_Should_Add_Multiple_Shwerko_Item(); }
 		public new void Simple_Repo_Should_Create_IQueryable() { base.Simple_Repo_Should_Create_IQueryable(); }
-		public new void Simple_Repo_Should_Create_Schema_And_Save_Shwerko() { base.Simple_Repo_Should_Create_Schema_And_Save_Shwerko(); }
 		public new void Simple_Repo_Should_Delete_Multiple_Shwerko_Item_With_Expression() { base.Simple_Repo_Should_Delete_Multiple_Shwerko_Item_With_Expression(); }
 		public new void Simple_Repo_Should_Delete_Multiple_Shwerko_Item_With_List() { base.Simple_Repo_Should_Delete_Multiple_Shwerko_Item_With_List(); }
 		public new void Simple_Repo_Should_Delete_Single_Shwerko_Item() { base.Simple_Repo_Should_Delete_Single_Shwerko_Item(); }
