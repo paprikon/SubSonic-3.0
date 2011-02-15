@@ -125,6 +125,7 @@
     <Compile Include="Repositories\SQLiteSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\SqlServerSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\TestBases\Comment.cs" />
+    <Compile Include="Repositories\TestBases\Shwerko3.cs" />
     <Compile Include="Repositories\TestBases\Director.cs" />
     <Compile Include="Repositories\TestBases\DummyForDelete.cs" />
     <Compile Include="Repositories\TestBases\IShwerko.cs" />
