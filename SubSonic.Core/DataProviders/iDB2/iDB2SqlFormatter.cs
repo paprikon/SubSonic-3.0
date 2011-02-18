@@ -389,11 +389,11 @@ namespace SubSonic.DataProviders.iDB2
 
         protected override Expression VisitColumn(ColumnExpression column)
         {
-				//if (column.Alias != null)
-				//{
-				//    sb.AppendFormat("\"{0}\"", GetAliasName(column.Alias));
-				//    sb.Append(".");
-				//}
+			  if (column.Alias != null)
+			  {
+				  sb.AppendFormat("{0}", GetAliasName(column.Alias));
+				  sb.Append(".");
+			  }
             sb.AppendFormat("{0}", column.Name);
             return column;
         }
