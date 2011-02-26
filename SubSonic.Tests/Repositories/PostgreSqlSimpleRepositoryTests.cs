@@ -11,7 +11,7 @@ namespace SubSonic.Tests.Repositories
     public class PostgreSqlSimpleRepositoryTests : SimpleRepositoryTests
     {
 		 public PostgreSqlSimpleRepositoryTests() :
-			 base(ProviderFactory.GetProvider("Postgresql"))
+			 base(ProviderFactory.GetProvider("Server=server;Database=subsonic;user id=subsonic; password=;", "Npgsql"))
         {
         }
 

@@ -36,11 +36,11 @@ namespace SubSonic.Tests.Repositories
 
         public SimpleRepositoryTests(IDataProvider provider)
         {
-            provider.Log = Console.Out;
-            _repo = new SimpleRepository(provider, SimpleRepositoryOptions.RunMigrations);
+			  _provider = provider;
+			  _provider.Log = Console.Out;
+			  _repo = new SimpleRepository(_provider, SimpleRepositoryOptions.RunMigrations);
 
-            TestSupport.CleanTables(provider,
-                            "Shwerkos", "DummyForDeletes", "Shwerko2s", "NonAutoIncrementingIdWithDefaultSettings");            
+				this.CleanTables();
         }
 
         public SimpleRepositoryTests(IRepository repo)
@@ -50,29 +50,8 @@ namespace SubSonic.Tests.Repositories
 
         protected virtual void CleanTables()
         {
-            try
-            {
-                var qry = new CodingHorror(_provider, "DROP TABLE Shwerkos").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE DummyForDeletes").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE Shwerko2s").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE NonAutoIncrementingIdWithDefaultSettings").Execute();
-            }
-            catch { }
+            TestSupport.CleanTables(_provider,
+                            "Shwerkos", "DummyForDeletes", "Shwerko2s", "NonAutoIncrementingIdWithDefaultSettings");            
         }
 
         private Shwerko CreateTestRecord(Guid key)
