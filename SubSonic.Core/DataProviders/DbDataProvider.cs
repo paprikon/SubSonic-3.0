@@ -335,6 +335,11 @@ namespace SubSonic.DataProviders
             return FindOrCreateTable(typeof(T));
         }
 
+		  public virtual DbType IdentifyColumnDataType(Type type, bool isNullable)
+		  {
+			  return Objects.IdentifyColumnDataType(type, isNullable);
+		  }
+
         public abstract string InsertionIdentityFetchString { get; }
 
         public abstract string QualifyTableName(ITable tbl);

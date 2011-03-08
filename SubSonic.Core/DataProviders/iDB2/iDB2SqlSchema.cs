@@ -44,27 +44,31 @@ namespace SubSonic.DataProviders.iDB2
 			switch (dbType)
 			{
 				case DbType.Object:
-				case DbType.AnsiString:
-				case DbType.AnsiStringFixedLength:
 				case DbType.String:
 				case DbType.Xml:
+				case DbType.AnsiString:
+				case DbType.AnsiStringFixedLength:
 				case DbType.StringFixedLength:
-					return "varchar";
+					return "character";
 				case DbType.Boolean:
 					return "boolean";
 				case DbType.SByte:
-				case DbType.Binary:
 				case DbType.Byte:
 					return "varbinary";
+				case DbType.Binary:
+					return "blob";
 				case DbType.Time:
+					return "time";
 				case DbType.Date:
+					return "date";
 				case DbType.DateTime:
 					return "timestamp";
 				case DbType.Currency:
 				case DbType.Decimal:
+					return "decimal";
 				case DbType.Double:
 				case DbType.Single:
-					return "decimal";
+					return "float";
 				case DbType.Guid:
 					return "varchar(36)";
 				case DbType.Int16:
@@ -147,9 +151,8 @@ namespace SubSonic.DataProviders.iDB2
 			switch (sqlType.ToLowerInvariant())
 			{
 				case "character":
-					return DbType.StringFixedLength;
 				case "varchar":
-					return DbType.String;
+					return DbType.AnsiString;
 				case "decimal":
 				case "numeric":
 				case "decfloat":
@@ -174,9 +177,9 @@ namespace SubSonic.DataProviders.iDB2
 				case "binary":
 					return DbType.Binary;
 				case "rowid":
-					return DbType.String; //using default, but provided for visibility.
+					return DbType.AnsiString; //using default, but provided for visibility.
 				default:
-					return DbType.String;
+					return DbType.AnsiString;
 			}
 		}
 

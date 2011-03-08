@@ -71,5 +71,6 @@ namespace SubSonic.DataProviders
         DbConnection CreateConnection();
         void MigrateToDatabase<T>(Assembly assembly);
         void MigrateNamespaceToDatabase(string modelNamespace, Assembly assembly);
+		  DbType IdentifyColumnDataType(Type type, bool isNullable);
     }
 }

@@ -200,7 +200,7 @@ namespace SubSonic.Extensions
 						  column.PropertyName = prop.Name;
 					bool isNullable = prop.PropertyType.Name.Contains("Nullable");
 
-                	column.DataType = IdentifyColumnDataType(prop.PropertyType, isNullable);
+                	column.DataType = provider.IdentifyColumnDataType(prop.PropertyType, isNullable);
 
                     if(column.DataType == DbType.Decimal || column.DataType == DbType.Double)
                     {
@@ -208,7 +208,7 @@ namespace SubSonic.Extensions
                         column.NumberScale = 2;
                         column.NumericPrecision = 10;
                     }
-                    else if(column.DataType == DbType.String)
+                    else if(column.DataType == DbType.String || column.DataType == DbType.AnsiString)
                     {
                         column.MaxLength = 255;
                     }
@@ -311,7 +311,7 @@ namespace SubSonic.Extensions
             return false;
         }
 
-		private static DbType IdentifyColumnDataType(Type type, bool isNullable)
+		internal static DbType IdentifyColumnDataType(Type type, bool isNullable)
     	{
 			//if this is a nullable type, we need to get at the underlying type
 			if (isNullable)
