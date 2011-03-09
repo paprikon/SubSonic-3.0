@@ -45,6 +45,8 @@ namespace SubSonic.Query
 
         public bool IsExpression { get; internal set; }
 
+		  public int Size { get; set; }
+
         public Update query { get; internal set; }
 
         /// <summary>
@@ -193,7 +195,8 @@ namespace SubSonic.Query
                                 ColumnName = column.QualifiedName,
                                 ParameterName = (_provider.ParameterPrefix + "up_" + column.Name),
                                 IsExpression = isExpression,
-                                DataType = column.DataType
+                                DataType = column.DataType,
+										  Size = column.MaxLength
                             };
             return s;
         }
@@ -242,7 +245,8 @@ namespace SubSonic.Query
                     if(col != null)
                         s.DataType = col.DataType;
                 }
-                cmd.Parameters.Add(s.ParameterName, s.Value, s.DataType);
+					 var param = new QueryParameter() { DataType = s.DataType, ParameterName = s.ParameterName, ParameterValue = s.Value, Size = s.Size };
+                cmd.Parameters.Add(param);
             }
 
             //set the contstraints
