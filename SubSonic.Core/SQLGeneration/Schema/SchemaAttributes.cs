@@ -142,7 +142,7 @@ namespace SubSonic.SqlGeneration.Schema
 
         public bool Accept(IColumn column)
         {
-            return DbType.String == column.DataType;
+			  return DbType.String == column.DataType || column.DataType == DbType.AnsiString || column.DataType == DbType.AnsiStringFixedLength || column.DataType == DbType.StringFixedLength;
         }
 
         public void Apply(IColumn column)

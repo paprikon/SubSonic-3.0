@@ -31,6 +31,7 @@ namespace SubSonic.Query
         internal bool IsExpression;
         internal string ParameterName = String.Empty;
         internal object Value;
+		  internal int? Size;
     }
 
     /// <summary>
@@ -163,14 +164,14 @@ namespace SubSonic.Query
             int itemIndex = 0;
             foreach(string s in ColumnList)
             {
-                AddInsertSetting(s, values[itemIndex], DbType.AnsiString, isExpression);
+                AddInsertSetting(s, values[itemIndex], DbType.AnsiString, isExpression, null);
                 itemIndex++;
             }
 
             return this;
         }
 
-        private void AddInsertSetting(string columnName, object columnValue, DbType dbType, bool isExpression)
+        private void AddInsertSetting(string columnName, object columnValue, DbType dbType, bool isExpression, int? size)
         {
             InsertSetting setting = new InsertSetting
                                         {
@@ -178,7 +179,8 @@ namespace SubSonic.Query
                                             ParameterName = _provider.ParameterPrefix + "ins_" + columnName.ToAlphaNumericOnly(),
                                             Value = columnValue,
                                             IsExpression = isExpression,
-                                            DataType = dbType
+                                            DataType = dbType,
+														  Size = size
                                         };
             Inserts.Add(setting);
         }
@@ -191,7 +193,7 @@ namespace SubSonic.Query
         /// <returns></returns>
         public Insert Value(string column, object columnValue)
         {
-            AddInsertSetting(column, columnValue, DbType.AnsiString, false);
+            AddInsertSetting(column, columnValue, DbType.AnsiString, false, null);
             ColumnList.Add(column);
             return this;
         }
@@ -205,10 +207,15 @@ namespace SubSonic.Query
         /// <returns></returns>
         public Insert Value(string column, object columnValue, DbType dbType)
         {
-            AddInsertSetting(column, columnValue, dbType, false);
+			  return this.Value(column, columnValue, dbType, null);
+        }
+
+		  public Insert Value(string column, object columnValue, DbType dbType, int? size)
+		  {
+            AddInsertSetting(column, columnValue, dbType, false, size);
             ColumnList.Add(column);
             return this;
-        }
+		  }
 
         /// <summary>
         /// Valueses the specified values.
@@ -280,7 +287,8 @@ namespace SubSonic.Query
                                        {
                                            ParameterName = s.ParameterName,
                                            ParameterValue = s.Value ?? DBNull.Value,
-                                           DataType = s.DataType
+                                           DataType = s.DataType,
+														 Size = s.Size ?? 0
                                        };
                 cmd.Parameters.Add(p);
             }

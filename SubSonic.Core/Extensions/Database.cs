@@ -459,7 +459,7 @@ namespace SubSonic.Extensions
                     if(col != null)
                     {
                         if(!col.AutoIncrement && !col.IsReadOnly && !(col.DefaultSetting != null && hashed[key] == null))
-                            query.Value(col.QualifiedName, hashed[key], col.DataType);
+									query.Value(col.QualifiedName, hashed[key], col.DataType, (col.MaxLength == 0 ? null as int? : col.MaxLength));
                     }
                 }
             }
