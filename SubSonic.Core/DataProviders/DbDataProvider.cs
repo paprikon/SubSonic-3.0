@@ -397,6 +397,10 @@ namespace SubSonic.DataProviders
                     p.Direction = param.Mode;
                     p.DbType = param.DataType;
 
+						  //having some trouble with ANSI char types. Requires field size. 
+						  if (param.Size > 0)
+							  p.Size = param.Size;
+
                     //output parameters need to define a size
                     //our default is 50
                     if(p.Direction == ParameterDirection.Output || p.Direction == ParameterDirection.InputOutput)
