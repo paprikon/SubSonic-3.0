@@ -36,8 +36,9 @@ namespace SubSonic.Tests.Repositories
 
         public SimpleRepositoryTests(IDataProvider provider)
         {
-            provider.Log = Console.Out;
-            _repo = new SimpleRepository(provider, SimpleRepositoryOptions.RunMigrations);
+			  _provider = provider;
+			  _provider.Log = Console.Out;
+			  _repo = new SimpleRepository(_provider, SimpleRepositoryOptions.RunMigrations);
 
             TestSupport.CleanTables(provider,
                             "Shwerkos", "DummyForDeletes", "Shwerko2s", "Shwerko3s", "NonAutoIncrementingIdWithDefaultSettings");            
@@ -48,39 +49,12 @@ namespace SubSonic.Tests.Repositories
             _repo = repo;
         }
 
-        protected virtual void CleanTables()
-        {
-            try
-            {
-                var qry = new CodingHorror(_provider, "DROP TABLE Shwerkos").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE DummyForDeletes").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE Shwerko2s").Execute();
-            }
-            catch { }
-
-            try
-            {
-                new CodingHorror(_provider, "DROP TABLE NonAutoIncrementingIdWithDefaultSettings").Execute();
-            }
-            catch { }
-        }
-
         private Shwerko CreateTestRecord(Guid key)
         {
             return CreateTestRecord(key, (s) => { });
         }
 
-		  protected Shwerko CreateTestRecord(Guid key, Action<Shwerko> withValuesApplied)
+		protected Shwerko CreateTestRecord(Guid key, Action<Shwerko> withValuesApplied)
         {
             return CreateTestRecord<Shwerko>(key, withValuesApplied);
         }
@@ -90,7 +64,7 @@ namespace SubSonic.Tests.Repositories
             return CreateTestRecord<T>(key, x => { });
         }
 
-		  protected T CreateTestRecord<T>(Guid key, Action<T> withValuesApplied) where T : IShwerko, new()
+		protected T CreateTestRecord<T>(Guid key, Action<T> withValuesApplied) where T : IShwerko, new()
         {
             var item = new T();
             item.Key = key;
@@ -106,7 +80,7 @@ namespace SubSonic.Tests.Repositories
         }
 
         [Fact]
-        public void imple_Repo_Should_Create_Schema_And_Save_Shwerko()
+        public void Simple_Repo_Should_Create_Schema_And_Save_Shwerko()
         {
             var id = Guid.NewGuid();
             var item = CreateTestRecord(id);
