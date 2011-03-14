@@ -124,6 +124,7 @@
     <Compile Include="Repositories\SQLiteSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\SqlServerSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\TestBases\Comment.cs" />
+    <Compile Include="Repositories\TestBases\Shwerko3.cs" />
     <Compile Include="Repositories\TestBases\Director.cs" />
     <Compile Include="Repositories\TestBases\DummyForDelete.cs" />
     <Compile Include="Repositories\TestBases\IShwerko.cs" />
@@ -165,9 +166,7 @@
     <Compile Include="TestConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="App.config" />
     <None Include="BugReports\Generated\ActiveRecord.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ActiveRecord.cs</LastGenOutput>

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
@@ -54,6 +53,10 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="MySql.Data, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\MySql.Data.dll</HintPath>
@@ -112,10 +115,29 @@
     <Compile Include="BugReports\Update.cs" />
     <Compile Include="DbClientTypeName.cs" />
     <Compile Include="Repositories\PostgreSqlSimpleRepositoryTests.cs" />
+    <Compile Include="Repositories\AutoCollectionTests.cs" />
+    <Compile Include="Repositories\SqlServerAutoCollectionTests.cs" />
+    <Compile Include="Repositories\SQLiteAutoCollectionTests.cs" />
+    <Compile Include="Repositories\MySQLAutoCollectionTests.cs" />
     <Compile Include="Repositories\MySQLSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\SimpleTestRepositoryTests.cs" />
     <Compile Include="Repositories\SQLiteSimpleRepositoryTests.cs" />
     <Compile Include="Repositories\SqlServerSimpleRepositoryTests.cs" />
+    <Compile Include="Repositories\TestBases\Comment.cs" />
+    <Compile Include="Repositories\TestBases\Shwerko3.cs" />
+    <Compile Include="Repositories\TestBases\Director.cs" />
+    <Compile Include="Repositories\TestBases\DummyForDelete.cs" />
+    <Compile Include="Repositories\TestBases\IShwerko.cs" />
+    <Compile Include="Repositories\TestBases\MockInterceptionStrategy.cs" />
+    <Compile Include="Repositories\TestBases\Movie.cs" />
+    <Compile Include="Repositories\TestBases\NonAutoIncrementingIdWithDefaultSetting.cs" />
+    <Compile Include="Repositories\TestBases\NonVirtualRelationProperty.cs" />
+    <Compile Include="Repositories\TestBases\Plot.cs" />
+    <Compile Include="Repositories\TestBases\Shwerko.cs" />
+    <Compile Include="Repositories\TestBases\Shwerko2.cs" />
+    <Compile Include="Repositories\TestBases\SQLitey.cs" />
+    <Compile Include="Repositories\TestSupport.cs" />
+<<<<<<< HEAD
     <Compile Include="SimpleQuery\BatchTests.cs" />
     <Compile Include="LINQ\MySqlTests.cs" />
     <Compile Include="LINQ\SQL2005Tests.cs" />
@@ -203,140 +225,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 =======
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6B23B65F-2E09-4531-BDA1-A6EA08CBA843}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SubSonic.Tests</RootNamespace>
-    <AssemblyName>SubSonic.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>169</NoWarn>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Castle.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data, Version=6.0.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\MySql.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.OracleClient" />
-    <Reference Include="System.Data.SQLite, Version=1.0.61.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\System.Data.SQLite.DLL</HintPath>
-    </Reference>
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="xunit, Version=1.1.0.1323, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\xunit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BugReports\ActiveRecord.cs" />
-    <Compile Include="BugReports\Generated\ActiveRecord.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ActiveRecord.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BugReports\Generated\Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BugReports\Generated\StoredProcedures.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StoredProcedures.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BugReports\Generated\Structs.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Structs.tt</DependentUpon>
-    </Compile>
-    <Compile Include="BugReports\Generated\Territory.cs" />
-    <Compile Include="BugReports\Linq.cs" />
-    <Compile Include="BugReports\LinqGeneratorBugs.cs" />
-    <Compile Include="BugReports\QueryCommandBugs.cs" />
-    <Compile Include="BugReports\TestRepositoryBugs.cs" />
-    <Compile Include="BugReports\Update.cs" />
-    <Compile Include="DbClientTypeName.cs" />
-    <Compile Include="Repositories\AutoCollectionTests.cs" />
-    <Compile Include="Repositories\SqlServerAutoCollectionTests.cs" />
-    <Compile Include="Repositories\SQLiteAutoCollectionTests.cs" />
-    <Compile Include="Repositories\MySQLAutoCollectionTests.cs" />
-    <Compile Include="Repositories\MySQLSimpleRepositoryTests.cs" />
-    <Compile Include="Repositories\SimpleTestRepositoryTests.cs" />
-    <Compile Include="Repositories\SQLiteSimpleRepositoryTests.cs" />
-    <Compile Include="Repositories\SqlServerSimpleRepositoryTests.cs" />
-    <Compile Include="Repositories\TestBases\Comment.cs" />
-    <Compile Include="Repositories\TestBases\Director.cs" />
-    <Compile Include="Repositories\TestBases\DummyForDelete.cs" />
-    <Compile Include="Repositories\TestBases\IShwerko.cs" />
-    <Compile Include="Repositories\TestBases\MockInterceptionStrategy.cs" />
-    <Compile Include="Repositories\TestBases\Movie.cs" />
-    <Compile Include="Repositories\TestBases\NonAutoIncrementingIdWithDefaultSetting.cs" />
-    <Compile Include="Repositories\TestBases\NonVirtualRelationProperty.cs" />
-    <Compile Include="Repositories\TestBases\Plot.cs" />
-    <Compile Include="Repositories\TestBases\Shwerko.cs" />
-    <Compile Include="Repositories\TestBases\Shwerko2.cs" />
-    <Compile Include="Repositories\TestBases\SQLitey.cs" />
-    <Compile Include="Repositories\TestSupport.cs" />
     <Compile Include="SimpleQuery\BatchTests.cs" />
     <Compile Include="LINQ\MySqlTests.cs" />
     <Compile Include="LINQ\SQL2005Tests.cs" />
@@ -401,9 +289,6 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Transactions\" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -420,8 +305,11 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Transactions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
->>>>>>> d7d8f36a298e2ed14c0879164ee9ae317cc467c8
+>>>>>>> 61fd2c2bc6f57c50a8ad38ac53dabfa891e2aa9d
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
