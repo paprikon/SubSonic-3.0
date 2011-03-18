@@ -27,11 +27,9 @@ namespace SubSonic.DataProviders.PostgreSql
 		public PostgreSqlSchema()
 		{
 			ADD_COLUMN = "ALTER TABLE \"{0}\" ADD \"{1}\"{2};";
-			//can't do this
-			ALTER_COLUMN = @"";
+            ALTER_COLUMN = "ALTER TABLE \"{0}\" ALTER COLUMN \"{1}\"{3}{2};";
 			CREATE_TABLE = "CREATE TABLE \"{0}\" ({1} \r\n);";
-			//can't do this
-			DROP_COLUMN = @"";
+            DROP_COLUMN = "ALTER TABLE \"{0}\" DROP COLUMN \"{1}\"";
 			DROP_TABLE = "DROP TABLE \"{0}\";";
 
 			UPDATE_DEFAULTS = "UPDATE \"{0}\" SET \"{1}\"={2};";
@@ -89,14 +87,19 @@ namespace SubSonic.DataProviders.PostgreSql
 
 		public override string BuildDropColumnStatement(string tableName, string columnName)
 		{
-			//TODO: drop column
-			return "";
+            return base.BuildDropColumnStatement(tableName, columnName);
 		}
 
 		public override string BuildAlterColumnStatement(IColumn column)
 		{
-			//TODO: alter column
-			return "";
+            var sql = new StringBuilder();
+            sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, GenerateColumnAttributesType(column), " TYPE ");
+            if (column.DefaultSetting != null)
+            {
+                sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, GenerateColumnAttributesDefault(column), " SET ");
+            }
+            sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, GenerateColumnAttributesNullable(column), " SET ");
+            return sql.ToString();
 		}
 
 		/// <summary>
@@ -107,44 +110,56 @@ namespace SubSonic.DataProviders.PostgreSql
 		public override string GenerateColumnAttributes(IColumn column)
 		{
 			StringBuilder sb = new StringBuilder();
-			if (column.DataType == DbType.String && column.MaxLength > 8000)
-				sb.Append(" TEXT ");
-			else if (column.IsPrimaryKey && column.DataType == DbType.Int32
-				 || column.IsPrimaryKey && column.DataType == DbType.Int16
-				 || column.IsPrimaryKey && column.DataType == DbType.Int64
-				 )
-			{
-				if (column.AutoIncrement)
-					sb.Append(" SERIAL");
-				else
-					sb.Append(" INTEGER ");
-			}
-			else
-				sb.Append(" " + GetNativeType(column.DataType));
-
-			if (column.IsString && column.MaxLength < 8000)
-				sb.Append("(" + column.MaxLength + ")");
-			else if (column.DataType == DbType.Double || column.DataType == DbType.Decimal)
-				sb.Append("(" + column.NumericPrecision + ", " + column.NumberScale + ")");
-
-			if (column.IsPrimaryKey)
-			{
-				sb.Append(" NOT NULL");
-			}
-			else
-			{
-				if (!column.IsNullable)
-					sb.Append(" NOT NULL");
-				else
-					sb.Append(" NULL");
-
-				if (column.DefaultSetting != null)
-					sb.Append(" DEFAULT '" + column.DefaultSetting + "'");
-			}
-
+            sb.Append(GenerateColumnAttributesType(column));
+            sb.Append(GenerateColumnAttributesNullable(column));
+            if (!column.IsPrimaryKey && column.DefaultSetting != null) sb.Append(GenerateColumnAttributesDefault(column));
 			return sb.ToString();
 		}
+        protected string GenerateColumnAttributesType(IColumn column)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (column.DataType == DbType.String && column.MaxLength > 8000)
+                sb.Append(" TEXT ");
+            else if (column.IsPrimaryKey && column.DataType == DbType.Int32
+                 || column.IsPrimaryKey && column.DataType == DbType.Int16
+                 || column.IsPrimaryKey && column.DataType == DbType.Int64
+                 )
+            {
+                if (column.AutoIncrement)
+                    sb.Append(" SERIAL");
+                else
+                    sb.Append(" INTEGER ");
+            }
+            else
+                sb.Append(" " + GetNativeType(column.DataType));
 
+            if (column.IsString && column.MaxLength < 8000)
+                sb.Append("(" + column.MaxLength + ")");
+            else if (column.DataType == DbType.Double || column.DataType == DbType.Decimal)
+                sb.Append("(" + column.NumericPrecision + ", " + column.NumberScale + ")");
+
+            return sb.ToString();
+        }
+        protected string GenerateColumnAttributesNullable(IColumn column)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (column.IsPrimaryKey)
+            {
+                sb.Append(" NOT NULL");
+            }
+            else
+            {
+                if (!column.IsNullable)
+                    sb.Append(" NOT NULL");
+                else
+                    sb.Append(" NULL");
+            }
+            return sb.ToString();
+        }
+        protected string GenerateColumnAttributesDefault(IColumn column)
+        {
+            return (" DEFAULT '" + column.DefaultSetting + "'");
+        }
 		/// <summary>
 		/// Gets the type of the db.
 		/// </summary>
