@@ -98,7 +98,11 @@ namespace SubSonic.DataProviders.PostgreSql
             {
                 sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, GenerateColumnAttributesDefault(column), " SET ");
             }
-            sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, GenerateColumnAttributesNullable(column), " SET ");
+            if (column.IsNullable)            
+                sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, "NOT NULL", " DROP ");
+            else
+                sql.AppendFormat(ALTER_COLUMN, column.Table.Name, column.Name, "NOT NULL", " SET ");
+            
             return sql.ToString();
 		}
 
