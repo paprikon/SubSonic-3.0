@@ -15,7 +15,10 @@ namespace SubSonic.Tests.Repositories
             {
                 try
                 {
-                    new CodingHorror(provider, String.Format("DROP TABLE {0}", tableName)).Execute();
+                    if(provider.Name == "Npgsql")
+                        new CodingHorror(provider, String.Format("DROP TABLE \"{0}\"", tableName)).Execute();
+                    else
+                        new CodingHorror(provider, String.Format("DROP TABLE {0}", tableName)).Execute();
                 }
                 catch (Exception ex)
                 {
