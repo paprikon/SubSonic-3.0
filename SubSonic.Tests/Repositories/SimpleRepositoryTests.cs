@@ -193,6 +193,7 @@ namespace SubSonic.Tests.Repositories
 
             item = _repo.Single<Shwerko>(x => x.Key == id);
             Assert.Equal(id, item.Key);
+            Assert.Equal("Updated", item.Name);
         }
 
         [Fact]
